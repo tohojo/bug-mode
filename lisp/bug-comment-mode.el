@@ -54,7 +54,7 @@
     (puthash "id" bug---id params)
     (save-excursion
       (goto-char 0)
-      (while (re-search-forward "^\\([^:]*\\): ?\\(.*\\)$" nil t)
+      (while (re-search-forward "^\\([a-z0-9_]*\\): ?\\(.*\\)$" nil t)
         (puthash (match-string 1) (match-string 2) params))
       (re-search-forward "^[^\n]" nil t)
       (move-beginning-of-line nil)
