@@ -47,8 +47,12 @@ parsed response as alist"
   (let* ((method (concat (cdr (assoc 'resource args)) "."
                          (cdr (assoc 'operation args))))
          (data (cdr (assoc 'data args)))
-         (jdata (if (bug--instance-property :api-key instance)
-                    (cons (cons "api_key" (bug--instance-property :api-key instance)) data)
+         (api-key (bug--instance-property :api-key instance))
+         (jdata (if api-key
+                    (if (hash-table-p data)
+                        (progn (puthash "api_key" api-key data)
+                               data)
+                      (cons (cons "api_key" api-key) data))
              data))
          (json-str (json-encode `((method . ,method) (params . [,jdata]) (id 11))))
          (url (concat (bug--instance-property :url instance) "/jsonrpc.cgi"))
